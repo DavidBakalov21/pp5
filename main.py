@@ -1,68 +1,40 @@
 def Input(text):
     return input(text)
-
-
 def EncryptFile(path, key):
-    encryptLine=""
-    encrypted = []
     Output=Input("Output file:")
     with open(path,'r')as file:
-        for line in file:
-            for char in line:
-                base = 32
-                end = 126
-                encrypted_char = chr(base + (ord(char) - base + (key % (end - base + 1))) % (end - base + 1))
-                encryptLine+=encrypted_char
-            encrypted.append(encryptLine)
+            encrypted=[EncryptText(line.strip(),key) for line in file]
     with open(Output,'w')as file:
-        for line in encrypted:
-            file.write(line)
-
-
-
-
+        for i in encrypted:
+            file.write(i+'\n')
     return encrypted
-
-
 def DecryptFile(path, key):
-    decryptLine = ""
-    decrypted = []
     Output = Input("Output file:")
     with open(path, 'r') as file:
-        for line in file:
-            for char in line:
-                base = 32
-                end = 126
-                decrypted_char = chr(base + (ord(char) - base - (key % (end - base + 1)) + (end - base + 1)) % (end - base + 1))
-                decryptLine += decrypted_char
-            decrypted.append(decryptLine)
-    with open(Output,'w')as file:
+        decrypted = [DecryptText(line.strip(), key) for line in file]
+    with open(Output, 'w') as file:
         for line in decrypted:
-            file.write(line)
+            file.write(line+'\n')
 
     return decrypted
 
 
-def EncryptText(text, key):
-    encryptLine = ''
-    for char in text:
-        base = 32
-        end = 126
-        encrypted_char = chr(base + (ord(char) - base + (key % (end - base + 1))) % (end - base + 1))
-        encryptLine += encrypted_char
-    return encryptLine
+def EncryptChar(char, key):
+    base = 32
+    end = 126
+    encrypted_char = chr(base + (ord(char) - base + (key % (end - base + 1))) % (end - base + 1))
+    return encrypted_char
+def DecryptChar(char, key):
+    base = 32
+    end = 126
+    decrypted_char = chr(base + (ord(char) - base - (key % (end - base + 1)) + (end - base + 1)) % (end - base + 1))
+    return decrypted_char
 
+def EncryptText(text,key):
+    return ''.join([EncryptChar(i, key) for i in text])
 
 def DecryptText(text, key):
-    decryptLine = ''
-    for char in text:
-        base = 32
-        end = 126
-        decrypted_char = chr(base + (ord(char) - base - (key % (end - base + 1)) + (end - base + 1)) % (end - base + 1))
-        decryptLine += decrypted_char
-    return decryptLine
-
-
+    return ''.join([DecryptChar(i,key) for i in text])
 def command():
     choice=input("File or console:")
     if choice=="File":
